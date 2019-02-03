@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>デジタル豆まき</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href=".././css/style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+	<div class="content">
+		<h1><%= @mentor.name %>に豆をなげよう！</h1>
+    <h2><span id="peas"><%= @mentor.peas %></span>個</h2>
+    <div class="mamemaki">
+      <img src="../<%= @mentor.img %>">
+    </div>
+	</div>
+  <canvas id="canvas"></canvas>
+  <script>
+    window.onload = function() {
+      $('#canvas').click(function(e) {
+        var num = Number($('#peas').text());
+        $.ajax('/peas/<%= @mentor.id %>', {
+          type: 'post'
+        })
+        .done(function() {
+          num = num + 1;
+          $('#peas').html(num);
+          var cvs = document.getElementById('canvas');
+          var ctx = cvs.getContext('2d');
+
+          var img = new Image();
+          img.src = "../images/pea.png";
+
+          img.onload = function(){
+            console.log(e.pageX,e.pageY);
+            ctx.drawImage(img,e.pageX/4,e.pageY/4,15,15);
+          }
+      })
+    })
+    }
+  </script>
+</body>
+</html>
